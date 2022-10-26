@@ -5,11 +5,11 @@
 <a href="https://github.com/camaraproject/HomeDevicesPrioritization" title="Repo Size"><img src="https://img.shields.io/github/repo-size/camaraproject/HomeDevicesPrioritization?style=plastic"></a>
 <a href="https://github.com/camaraproject/HomeDevicesPrioritization/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg?style=plastic"></a>
 
-# HomeDevicesPrioritization
-Repository to describe, develop, document and test the HomeDevicesPrioritization API family
+# HomeDevicesQoD
+Repository to describe, develop, document and test the HomeDevicesQoD API family
 
 ## Scope
-* Service APIs for “HomeDevicesPrioritization” (see APIBacklog.md)  
+* Service APIs for “HomeDevicesQoD” (see APIBacklog.md)  
 * It provides the customer with the ability to:  
   * request the prioritization of an specific device traffic on the user home network.
 * Describe, develop, document and test the APIs (with 1-2 Telcos)  
