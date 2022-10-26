@@ -1,4 +1,4 @@
 | Org                    | Name                                                |
 | -----------------------| ----------------------------------------------------|
-| Telefonica | Jose Ordonez-Lucena |
+| Telefonica | Jesús Peña |
 
