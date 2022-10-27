@@ -1,0 +1,419 @@
+openapi: 3.0.3
+info:
+  title: Home Devices QoD - DRAFT VERSION
+  description: |-
+    Service Enabling Network Function API for *QoS-on-demand* (QoD) control applied to devices connected to the user home network. API clients can request to change on demand DSCP value for the IP traffic corresponding to a specific user home device.
+
+    # Relevant Definitions and concepts
+
+    - **Home Devices**: user devices connected to the user home network.
+    - **NaaS**: *Network-as-a-Service* model where Telco Network resources are exposed to third parties through APIs. In this particular API, QoD operations for home devices are exposed following this model.
+    - **DSCP**: *Differentiated Services (DiffServ) Code Point*. DiffServ is a simple and scalable mechanism for classifying and managing network traffic and providing quality of service (QoS) on IP networks. The DSCP value will be used to classify the traffic of the target home device in order to be treated accordingly.
+
+    # API Functionality
+
+    This API allows to third party clients to set on demand the DSCP value associated to the traffic of the device connected to the user home network matching the input criteria provided. Device traffic will be classified and treated accordingly.
+     
+    - **NOTE: This API allows to apply QoS treatment for a target user device only within user Home Network** 
+
+    # Resources and Operations overview
+
+    The API provides a single endpoint:
+     
+    - An endpoint to set the desired DSCP value for the traffic corresponding to the user device matching the input criteria.
+  termsOfService: http://example.com/terms/
+  contact:
+    name: API Support
+    url: http://www.example.com/support
+    email: support@example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: https://{host}{basePath}
+    variables:
+      host:
+        default: api.example.com
+        description: Host that serves the API
+      basePath:
+        default: /home-devices-qod/v1
+        description: API URL prefix for all API paths
+paths:
+  /dscp:
+    put:
+      summary: Set the desired DSCP value for a user home device
+      description: |-
+        Set the desired DSCP value for the traffic corresponding to the user home device matching the input criteria. **Setting DSCP value to CS0 restores default traffic treatment for the target home device.**
+        
+        - The operation is executed for the user whose `sub` is in the access token used to call this endpoint, and for the home network also deducted from the information included in the access token.
+        - The target user device is identified by the internal IP address of that device in the home network.
+        - In case there is no device matching the input criteria, the operation returns a 404 error.
+      tags:
+        - Home Devices QoD
+      operationId: setDscp
+      parameters:
+        - in: header
+          name: x-correlator
+          required: false
+          description: Correlation id for the different services
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DscpUpdate'
+        required: true
+      responses:
+        '204':
+          headers:
+            x-correlator:
+              description: Correlation id for the different services
+              schema:
+                type: string
+          description: New DSCP value passed all validations and was applied
+        '400':
+          $ref: '#/components/responses/InvalidArgument'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NoDeviceMatch'
+        '409':
+          $ref: '#/components/responses/DscpConflict'
+        '500':
+          $ref: '#/components/responses/Internal'
+        '503':
+          $ref: '#/components/responses/RouterActionsUnavailable'
+        '504':
+          $ref: '#/components/responses/Timeout'
+components:
+  schemas:
+    DscpUpdate:
+      type: object
+      description: Payload to change the prioritization status of a device.
+      required:
+        - dscp
+        - ip_address
+      properties:
+        dscp:
+          type: string
+          description: DSCP information for QoS
+          enum:
+            - CS0
+            - CS1
+            - AF11
+            - AF12
+            - AF13
+            - CS2
+            - AF21
+            - AF22
+            - AF23
+            - CS3
+            - AF31
+            - AF32
+            - AF33
+            - CS4
+            - AF41
+            - AF42
+            - AF43
+            - CS5
+            - EF
+            - CS6
+            - CS7
+            - MAX_ALLOWED
+          example: CS0
+        ip_address:
+          type: string
+          format: ipv4
+          pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}?$'
+          description: Internal IP address of the connected device in the LAN.
+          example: 192.168.1.27
+  responses:
+    InvalidArgument:
+      description: Problem with the client request
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                required:
+                  - code
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - INVALID_ARGUMENT
+                    default: INVALID_ARGUMENT
+                    description: Client specified an invalid argument, request body or query param.
+              - type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    description: A human readable description of what the event represent
+          examples:
+            response:
+              value:
+                code: INVALID_ARGUMENT
+                message: Client specified an invalid argument, request body or query param
+    Unauthenticated:
+      description: Authentication problem with the client request
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                required:
+                  - code
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - UNAUTHENTICATED
+                    default: UNAUTHENTICATED
+                    description: Request not authenticated due to missing, invalid, or expired credentials.
+              - type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    description: A human readable description of what the event represent
+          examples:
+            response:
+              value:
+                code: UNAUTHENTICATED
+                message: Request not authenticated due to missing, invalid, or expired credentials
+    PermissionDenied:
+      description: Client does not have sufficient permission
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                required:
+                  - code
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - PERMISSION_DENIED
+                    default: PERMISSION_DENIED
+                    description: Client does not have sufficient permissions to perform this action.
+              - type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    description: A human readable description of what the event represent
+          examples:
+            response:
+              value:
+                code: PERMISSION_DENIED
+                message: Authenticated user has no permission to access the requested resource
+    Internal:
+      description: Server error
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                required:
+                  - code
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - INTERNAL
+                    default: INTERNAL
+                    description: Unknown server error.Typically a server bug.
+              - type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    description: A human readable description of what the event represent
+          examples:
+            response:
+              value:
+                code: INTERNAL
+                message: Server error
+    RouterActionsUnavailable:
+      description: |-
+        Service unavailable. Typically the server is down.
+        In addition to regular scenario of UNAVAILABLE to handle service availability problems, another scenario may exist.
+         - The router is offline ("code": "HOME_DEVICES_QOD.ROUTER_OFFLINE","message": "Router is not online. Try it later.").
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - code
+              - message
+            properties:
+              code:
+                type: string
+                enum:
+                  - UNAVAILABLE
+                  - HOME_DEVICES_QOD.ROUTER_OFFLINE
+                description: |-
+                  Service unavailable. Typically the server is down.
+                  Router is not online. Try it later.
+              message:
+                type: string
+                description: A human readable description of what the event represent
+          examples:
+            response:
+              value:
+                code: UNAVAILABLE
+                message: Service unavailable
+    DscpConflict:
+      description: |-
+        DSCP value can't be set. In addition to regular CONFLICT scenario to handle conflict with the current state of the target resource, another scenarios may exist:
+         - HOME_DEVICES_QOD.TOO_MANY_DEVICES: Exceeded the maximum quantity of devices with non-default DSCP value.
+         - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD: RSSI from device is below allowed threshold.
+         - HOME_DEVICES_QOD.QOS_TOO_HIGH: DSCP requested is above the maximum QoS permitted.
+         - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD: The occupancy is above the allowed threshold.
+         - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE: Device is not connected to the required interface (e.g. WiFi 5GHz interface).
+         - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE: Device does not support required interface (e.g. WiFi 5GHz interface).
+         - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT: Device DSCP value is already set to default value.
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - code
+              - message
+            properties:
+              code:
+                type: string
+                enum:
+                  - HOME_DEVICES_QOD.TOO_MANY_DEVICES
+                  - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD
+                  - HOME_DEVICES_QOD.QOS_TOO_HIGH
+                  - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD
+                  - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE
+                  - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE
+                  - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT
+                description: Device can't be prioritized because a precondition does not hold
+              message:
+                type: string
+                description: A human readable description of what the event represent
+          examples:
+            response:
+              value:
+                code: HOME_DEVICES_QOD.TOO_MANY_DEVICES
+                message: Exceeded the maximum quantity of devices with non-default DSCP value
+    Timeout:
+      description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            allOf:
+              - type: object
+                required:
+                  - code
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - TIMEOUT
+                    default: TIMEOUT
+                    description: Request timeout exceeded
+              - type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    description: A human readable description of what the event represent
+          examples:
+            response:
+              value:
+                code: TIMEOUT
+                message: Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity
+    NoDeviceMatch:
+      description: |-
+        Resource Not Found.
+        In addition to regular scenario of NOT_FOUND, another scenario may exist.
+         - There is no device matching the input criteria. ("code": "HOME_DEVICES_QOD.NO_DEVICE_MATCH","message": "No connected device found for the input criteria provided.").
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - code
+              - message
+            properties:
+              code:
+                type: string
+                enum:
+                  - HOME_DEVICES_QOD.NO_DEVICE_MATCH
+                description: There is no device matching the input criteria
+              message:
+                type: string
+                description: A human readable description of what the event represent
+          examples:
+            response:
+              value:
+                code: HOME_DEVICES_QOD.NO_DEVICE_MATCH
+                message: No connected device found for the input criteria provided
+  securitySchemes:
+    three_legged:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+security:
+  - three_legged:
+    - home-devices-qod-dscp-write
+tags:
+  - name: Home Devices QoD
+    description: QoD control operations for home devices
+externalDocs:
+  description: Project documentation at CAMARA
+  url: https://github.com/camaraproject/
