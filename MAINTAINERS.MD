@@ -2,7 +2,7 @@
 | -----------------------| ----------------------------------------------------|
 | Orange | Sylvain Morel |
 | Orange | Ludovic Robert |
-| Scenera | Andrew |
+| Scenera | Andrew Wajs|
 | Telefonica | Jesús Peña |
 | Telefónica | Mona Mokhber |
 
