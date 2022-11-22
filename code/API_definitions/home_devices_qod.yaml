@@ -80,13 +80,13 @@ paths:
         '403':
           $ref: '#/components/responses/PermissionDenied'
         '404':
-          $ref: '#/components/responses/NoDeviceMatch'
+          $ref: '#/components/responses/SetDscpNotFound'
         '409':
-          $ref: '#/components/responses/DscpConflict'
+          $ref: '#/components/responses/SetDscpConflict'
         '500':
           $ref: '#/components/responses/Internal'
         '503':
-          $ref: '#/components/responses/RouterActionsUnavailable'
+          $ref: '#/components/responses/SetDscpServiceUnavailable'
         '504':
           $ref: '#/components/responses/Timeout'
 components:
@@ -131,6 +131,66 @@ components:
           pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}?$'
           description: Internal IP address of the connected device in the LAN.
           example: 192.168.1.27
+    ModelError:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          pattern: '^[1-5][0-9][0-9]$'
+          description: HTTP response status code
+        message:
+          type: string
+          description: A human readable description of what the event represent
+    RouterActionsUnavailable:
+      allOf:
+        - type: object
+          required:
+            - code
+          properties:
+            code:
+              type: string
+              enum:
+                - UNAVAILABLE
+                - HOME_DEVICES_QOD.ROUTER_OFFLINE
+              description: |-
+                  Service unavailable. Typically the server is down.
+                  Router is not online. Try it later.
+        - $ref: '#/components/schemas/ModelError'
+    DscpConflict:
+      allOf:
+        - type: object
+          required:
+            - code
+          properties:
+            code:
+              type: string
+              enum:
+                - CONFLICT
+                - HOME_DEVICES_QOD.TOO_MANY_DEVICES
+                - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD
+                - HOME_DEVICES_QOD.QOS_TOO_HIGH
+                - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD
+                - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE
+                - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE
+                - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT
+              description: Device can't be prioritized because a precondition does not hold
+        - $ref: '#/components/schemas/ModelError'
+    NoDeviceMatch:
+      allOf:
+        - type: object
+          required:
+            - code
+          properties:
+            code:
+              type: string
+              enum:
+                - NOT_FOUND
+                - HOME_DEVICES_QOD.NO_DEVICE_MATCH
+              description: There is no device matching the input criteria
+        - $ref: '#/components/schemas/ModelError'
   responses:
     InvalidArgument:
       description: Problem with the client request
@@ -151,18 +211,12 @@ components:
                     type: string
                     enum:
                       - INVALID_ARGUMENT
-                    default: INVALID_ARGUMENT
                     description: Client specified an invalid argument, request body or query param.
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "400"
                 code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param
     Unauthenticated:
@@ -184,18 +238,12 @@ components:
                     type: string
                     enum:
                       - UNAUTHENTICATED
-                    default: UNAUTHENTICATED
                     description: Request not authenticated due to missing, invalid, or expired credentials.
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "401"
                 code: UNAUTHENTICATED
                 message: Request not authenticated due to missing, invalid, or expired credentials
     PermissionDenied:
@@ -217,20 +265,61 @@ components:
                     type: string
                     enum:
                       - PERMISSION_DENIED
-                    default: PERMISSION_DENIED
                     description: Client does not have sufficient permissions to perform this action.
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "403"
                 code: PERMISSION_DENIED
                 message: Authenticated user has no permission to access the requested resource
+    SetDscpNotFound:
+      description: |-
+        Resource Not Found.
+        In addition to regular scenario of NOT_FOUND, another scenario may exist.
+         - There is no device matching the input criteria. ("code": "HOME_DEVICES_QOD.NO_DEVICE_MATCH","message": "No connected device found for the input criteria provided.").
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NoDeviceMatch'
+          examples:
+            response:
+              value:
+                status: "404"
+                code: HOME_DEVICES_QOD.NO_DEVICE_MATCH
+                message: No connected device found for the input criteria provided
+    SetDscpConflict:
+      description: |-
+        DSCP value can't be set. 
+        
+        In addition to regular CONFLICT scenario to handle conflict with the current state of the target resource, another scenarios may exist:
+         - HOME_DEVICES_QOD.TOO_MANY_DEVICES: Exceeded the maximum quantity of devices with non-default DSCP value.
+         - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD: RSSI from device is below allowed threshold.
+         - HOME_DEVICES_QOD.QOS_TOO_HIGH: DSCP requested is above the maximum QoS permitted.
+         - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD: The occupancy is above the allowed threshold.
+         - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE: Device is not connected to the required interface (e.g. WiFi 5GHz interface).
+         - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE: Device does not support required interface (e.g. WiFi 5GHz interface).
+         - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT: Device DSCP value is already set to default value.
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DscpConflict'
+          examples:
+            response:
+              value:
+                status: "409"
+                code: HOME_DEVICES_QOD.TOO_MANY_DEVICES
+                message: Exceeded the maximum quantity of devices with non-default DSCP value
     Internal:
       description: Server error
       headers:
@@ -250,23 +339,18 @@ components:
                     type: string
                     enum:
                       - INTERNAL
-                    default: INTERNAL
                     description: Unknown server error.Typically a server bug.
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "500"
                 code: INTERNAL
                 message: Server error
-    RouterActionsUnavailable:
+    SetDscpServiceUnavailable:
       description: |-
         Service unavailable. Typically the server is down.
+        
         In addition to regular scenario of UNAVAILABLE to handle service availability problems, another scenario may exist.
          - The router is offline ("code": "HOME_DEVICES_QOD.ROUTER_OFFLINE","message": "Router is not online. Try it later.").
       headers:
@@ -277,69 +361,13 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - code
-              - message
-            properties:
-              code:
-                type: string
-                enum:
-                  - UNAVAILABLE
-                  - HOME_DEVICES_QOD.ROUTER_OFFLINE
-                description: |-
-                  Service unavailable. Typically the server is down.
-                  Router is not online. Try it later.
-              message:
-                type: string
-                description: A human readable description of what the event represent
+            $ref: '#/components/schemas/RouterActionsUnavailable'
           examples:
             response:
               value:
-                code: UNAVAILABLE
-                message: Service unavailable
-    DscpConflict:
-      description: |-
-        DSCP value can't be set. In addition to regular CONFLICT scenario to handle conflict with the current state of the target resource, another scenarios may exist:
-         - HOME_DEVICES_QOD.TOO_MANY_DEVICES: Exceeded the maximum quantity of devices with non-default DSCP value.
-         - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD: RSSI from device is below allowed threshold.
-         - HOME_DEVICES_QOD.QOS_TOO_HIGH: DSCP requested is above the maximum QoS permitted.
-         - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD: The occupancy is above the allowed threshold.
-         - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE: Device is not connected to the required interface (e.g. WiFi 5GHz interface).
-         - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE: Device does not support required interface (e.g. WiFi 5GHz interface).
-         - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT: Device DSCP value is already set to default value.
-      headers:
-        x-correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - code
-              - message
-            properties:
-              code:
-                type: string
-                enum:
-                  - HOME_DEVICES_QOD.TOO_MANY_DEVICES
-                  - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD
-                  - HOME_DEVICES_QOD.QOS_TOO_HIGH
-                  - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD
-                  - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE
-                  - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE
-                  - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT
-                description: Device can't be prioritized because a precondition does not hold
-              message:
-                type: string
-                description: A human readable description of what the event represent
-          examples:
-            response:
-              value:
-                code: HOME_DEVICES_QOD.TOO_MANY_DEVICES
-                message: Exceeded the maximum quantity of devices with non-default DSCP value
+                status: "503"
+                code: HOME_DEVICES_QOD.ROUTER_OFFLINE
+                message: Router is not online. Try it later
     Timeout:
       description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
       headers:
@@ -361,49 +389,13 @@ components:
                       - TIMEOUT
                     default: TIMEOUT
                     description: Request timeout exceeded
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "504"
                 code: TIMEOUT
                 message: Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity
-    NoDeviceMatch:
-      description: |-
-        Resource Not Found.
-        In addition to regular scenario of NOT_FOUND, another scenario may exist.
-         - There is no device matching the input criteria. ("code": "HOME_DEVICES_QOD.NO_DEVICE_MATCH","message": "No connected device found for the input criteria provided.").
-      headers:
-        x-correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - code
-              - message
-            properties:
-              code:
-                type: string
-                enum:
-                  - HOME_DEVICES_QOD.NO_DEVICE_MATCH
-                description: There is no device matching the input criteria
-              message:
-                type: string
-                description: A human readable description of what the event represent
-          examples:
-            response:
-              value:
-                code: HOME_DEVICES_QOD.NO_DEVICE_MATCH
-                message: No connected device found for the input criteria provided
   securitySchemes:
     three_legged:
       type: openIdConnect
