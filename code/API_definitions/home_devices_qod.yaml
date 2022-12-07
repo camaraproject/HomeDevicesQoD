@@ -29,7 +29,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.0
+  version: 0.1.0
 servers:
   - url: https://{host}{basePath}
     variables:
@@ -37,7 +37,7 @@ servers:
         default: api.example.com
         description: Host that serves the API
       basePath:
-        default: /home-devices-qod/v1
+        default: /home-devices-qod/v0
         description: API URL prefix for all API paths
 paths:
   /dscp:
