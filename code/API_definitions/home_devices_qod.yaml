@@ -78,7 +78,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '403':
-          $ref: '#/components/responses/PermissionDenied'
+          $ref: '#/components/responses/SetDscpPermissionDenied'
         '404':
           $ref: '#/components/responses/SetDscpNotFound'
         '409':
@@ -155,6 +155,7 @@ components:
               enum:
                 - UNAVAILABLE
                 - HOME_DEVICES_QOD.ROUTER_OFFLINE
+              default: UNAVAILABLE
               description: |-
                   Service unavailable. Typically the server is down.
                   Router is not online. Try it later.
@@ -176,6 +177,7 @@ components:
                 - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE
                 - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE
                 - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT
+              default: CONFLICT
               description: Device can't be prioritized because a precondition does not hold
         - $ref: '#/components/schemas/ModelError'
     NoDeviceMatch:
@@ -189,7 +191,22 @@ components:
               enum:
                 - NOT_FOUND
                 - HOME_DEVICES_QOD.NO_DEVICE_MATCH
+              default: NOT_FOUND
               description: There is no device matching the input criteria
+        - $ref: '#/components/schemas/ModelError'
+    InvalidTokenContext:
+      allOf:
+        - type: object
+          required:
+            - code
+          properties:
+            code:
+              type: string
+              enum:
+                - PERMISSION_DENIED
+                - HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT
+              default: PERMISSION_DENIED
+              description: User home network cannot be deducted from access token context
         - $ref: '#/components/schemas/ModelError'
   responses:
     InvalidArgument:
@@ -211,6 +228,7 @@ components:
                     type: string
                     enum:
                       - INVALID_ARGUMENT
+                    default: INVALID_ARGUMENT
                     description: Client specified an invalid argument, request body or query param.
               - $ref: '#/components/schemas/ModelError'
           examples:
@@ -238,6 +256,7 @@ components:
                     type: string
                     enum:
                       - UNAUTHENTICATED
+                    default: UNAUTHENTICATED
                     description: Request not authenticated due to missing, invalid, or expired credentials.
               - $ref: '#/components/schemas/ModelError'
           examples:
@@ -246,8 +265,11 @@ components:
                 status: "401"
                 code: UNAUTHENTICATED
                 message: Request not authenticated due to missing, invalid, or expired credentials
-    PermissionDenied:
-      description: Client does not have sufficient permission
+    SetDscpPermissionDenied:
+      description: |-
+        Client does not have sufficient permission.
+        In addition to regular PERMISSION_DENIED scenario another scenario may exist:
+          - User home network cannot be deducted from access token context.("code": "HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT","message": "User home network cannot be deducted from access token context.").
       headers:
         x-correlator:
           description: Correlation id for the different services
@@ -256,23 +278,13 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-              - type: object
-                required:
-                  - code
-                properties:
-                  code:
-                    type: string
-                    enum:
-                      - PERMISSION_DENIED
-                    description: Client does not have sufficient permissions to perform this action.
-              - $ref: '#/components/schemas/ModelError'
+            $ref: '#/components/schemas/InvalidTokenContext'
           examples:
             response:
               value:
                 status: "403"
-                code: PERMISSION_DENIED
-                message: Authenticated user has no permission to access the requested resource
+                code: HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT
+                message: User home network cannot be deducted from access token context
     SetDscpNotFound:
       description: |-
         Resource Not Found.
@@ -339,6 +351,7 @@ components:
                     type: string
                     enum:
                       - INTERNAL
+                    default: INTERNAL
                     description: Unknown server error.Typically a server bug.
               - $ref: '#/components/schemas/ModelError'
           examples:
