@@ -109,7 +109,8 @@ Details of HTTP based error/exception codes for the Home Devices QoD API are des
 |13 |409 | HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT | "Device DSCP value is already set to default value." |
 |14  |500 | INTERNAL | "Server error" |
 |15  |503 | UNAVAILABLE | "Service unavailable" |
-|16  |504 | TIMEOUT | "Request timeout exceeded. Try later." |
+|16  |503 | HOME_DEVICES_QOD.ROUTER_OFFLINE | "Router is not online. Try it later." |
+|17  |504 | TIMEOUT | "Request timeout exceeded. Try later." |
 
 ## 3.4. Policies
 
@@ -138,7 +139,7 @@ If DSCP is properly applied, the response will be:
 
 ## 3.6. FAQs
 
-> FAQs will be added in a later version of the documentation
+FAQs will be added in a later version of the documentation
 
 ## 3.7. Terms
 
