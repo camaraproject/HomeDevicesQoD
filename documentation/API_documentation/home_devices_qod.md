@@ -46,7 +46,7 @@ Generally speaking, QoS on demand may improve QoE for real time services like Vi
 
 ## 1.2. Quick Start
 
-Home Devices QoD API v0.1.0 exposes only one endpoint, which can be used to set the desired DSCP value for the traffic corresponding to the user device matching the input criteria. Device traffic will be classified and treated accordingly.
+Home Devices QoD API exposes only one endpoint, which can be used to set the desired DSCP value for the traffic corresponding to the user device matching the input criteria. Device traffic will be classified and treated accordingly.
 
 To do so, the API client has to pass the following parameters in request body:
 
@@ -69,7 +69,7 @@ The Home Devices QoD API 3-legged access could also be combined with end-user co
 
 ## 3.1. Details
 
-> API version: 0.1.0
+> API version: 0.2.0
 
 ## 3.2. Endpoint definitions
 
