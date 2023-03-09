@@ -5,4 +5,4 @@
 | Scenera | Andrew Wajs|
 | Telefonica | Jesús Peña |
 | Telefónica | Mona Mokhber |
-
+| Deutsche Telekom | Rafal Artych |
