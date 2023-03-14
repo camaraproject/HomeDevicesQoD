@@ -1,4 +1,4 @@
-# Changelog QualityOnDemand
+# Changelog HomeDevicesQoD
 
 ## Table of Contents
 
