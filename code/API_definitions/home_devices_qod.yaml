@@ -2,25 +2,26 @@ openapi: 3.0.3
 info:
   title: Home Devices QoD - DRAFT VERSION
   description: |-
-    Service Enabling Network Function API for *QoS-on-demand* (QoD) control applied to devices connected to the user home network. API clients can request to change on demand DSCP value for the IP traffic corresponding to a specific user home device.
+    Service Enabling Network Function API for *QoS-on-demand* (QoD) control applied to devices connected to the user home network. API clients can request to change, ondemand, the desired QoS behaviour for the IP traffic corresponding to a specific user home device. The QoS behaviour is determined by the Service Class provided by the API Client, which is mapped to a DSCP value according to [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines.
 
     # Relevant Definitions and concepts
 
-    - **Home Devices**: user devices connected to the user home network.
+    - **Home Devices**: User devices connected to the user home network.
     - **NaaS**: *Network-as-a-Service* model where Telco Network resources are exposed to third parties through APIs. In this particular API, QoD operations for home devices are exposed following this model.
-    - **DSCP**: *Differentiated Services (DiffServ) Code Point*. DiffServ is a simple and scalable mechanism for classifying and managing network traffic and providing quality of service (QoS) on IP networks. The DSCP value will be used to classify the traffic of the target home device in order to be treated accordingly.
+    - **Service Class**: A statement of the required QoS characteristics of a traffic aggregate. Conceptually, a service class refers to applications with similar characteristics and performance requirements.
+    - **DSCP**: *Differentiated Services (DiffServ) Code Point*. DiffServ is a simple and scalable mechanism for classifying and managing network traffic and providing quality of service (QoS) on IP networks. The DSCP value will be used to classify the traffic of the target home device in order to be treated accordingly. 
 
     # API Functionality
 
-    This API allows to third party clients to set on demand the DSCP value associated to the traffic of the device connected to the user home network matching the input criteria provided. Device traffic will be classified and treated accordingly.
+    This API allows to third party clients to set, on demand, the desired QoS behaviour (service class) associated to the traffic of the device connected to the user home network that matches the input criteria provided. The device traffic is classified (by DSCP) and treated accordingly.
      
-    - **NOTE: This API allows to apply QoS treatment for a target user device only within user Home Network** 
+    - **NOTE: This API allows QoS treatment to be applied to a target user device only within the user Home Network (i.e. between the device and the home router)**.
 
     # Resources and Operations overview
 
     The API provides a single endpoint:
      
-    - An endpoint to set the desired DSCP value for the traffic corresponding to the user device matching the input criteria.
+    - An endpoint to set the desired QoS behaviour for the traffic corresponding to the user home device matching the input criteria.
   termsOfService: http://example.com/terms/
   contact:
     name: API Support
@@ -29,7 +30,7 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.1.0
+  version: 0.2.0
 servers:
   - url: https://{host}{basePath}
     variables:
@@ -40,18 +41,18 @@ servers:
         default: /home-devices-qod/v0
         description: API URL prefix for all API paths
 paths:
-  /dscp:
+  /qos:
     put:
-      summary: Set the desired DSCP value for a user home device
+      summary: Set the desired QoS behaviour for a user home device
       description: |-
-        Set the desired DSCP value for the traffic corresponding to the user home device matching the input criteria. **Setting DSCP value to CS0 restores default traffic treatment for the target home device.**
+        Set the desired QoS behaviour for the traffic corresponding to the user home device matching the input criteria. **QoS behaviour is determined by the service class provided by the API Client. Setting `Standard` service class restores default traffic treatment for the target home device.**
         
         - The operation is executed for the user whose `sub` is in the access token used to call this endpoint, and for the home network also deducted from the information included in the access token.
         - The target user device is identified by the internal IP address of that device in the home network.
         - In case there is no device matching the input criteria, the operation returns a 404 error.
       tags:
         - Home Devices QoD
-      operationId: setDscp
+      operationId: setQos
       parameters:
         - in: header
           name: x-correlator
@@ -63,7 +64,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DscpUpdate'
+              $ref: '#/components/schemas/QosOnDemandUpdate'
+            example: 
+              service_class: real_time_interactive
+              ip_address: 192.168.1.27
         required: true
       responses:
         '204':
@@ -72,65 +76,144 @@ paths:
               description: Correlation id for the different services
               schema:
                 type: string
-          description: New DSCP value passed all validations and was applied
+          description: Requested QoS passed all validations and was applied
         '400':
           $ref: '#/components/responses/InvalidArgument'
         '401':
           $ref: '#/components/responses/Unauthenticated'
         '403':
-          $ref: '#/components/responses/PermissionDenied'
+          $ref: '#/components/responses/setQosPermissionDenied'
         '404':
-          $ref: '#/components/responses/NoDeviceMatch'
+          $ref: '#/components/responses/setQosNotFound'
         '409':
-          $ref: '#/components/responses/DscpConflict'
+          $ref: '#/components/responses/setQosConflict'
         '500':
           $ref: '#/components/responses/Internal'
         '503':
-          $ref: '#/components/responses/RouterActionsUnavailable'
+          $ref: '#/components/responses/setQosServiceUnavailable'
         '504':
           $ref: '#/components/responses/Timeout'
 components:
   schemas:
-    DscpUpdate:
+    QosOnDemandUpdate:
       type: object
-      description: Payload to change the prioritization status of a device.
+      description: Payload to change the QoS behaviour associated to a device.
       required:
-        - dscp
+        - service_class
         - ip_address
       properties:
-        dscp:
+        service_class:
           type: string
-          description: DSCP information for QoS
+          description: |-
+            The name of the service class requested by the API client. It is associated with QoS behaviours optimised for a particular application type. Each service class is mapped to a DSCP value according to [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines. The DSCP value is used to classify the target home device's traffic so that it can be treated accordingly (i.e. to meet its QoS needs).
+            
+            The following service classes are supported:
+
+            | Service Class Name    | DSCP Name | DSCP value (decimal) | DCSP value (binary) | Application Examples                          |
+            |-----------------------|-----------|----------------------|---------------------|-----------------------------------------------|
+            | Real-Time Interactive |    CS4    |          32          |        100000       | Video conferencing and Interactive gaming     |
+            | Multimedia Streaming  |    AF31   |          26          |        011010       | Streaming video and audio on demand           |
+            | Broadcast Video       |    CS3    |          24          |        011000       | Broadcast TV & live events                    |
+            | Low-Latency Data      |    AF21   |          18          |        010010       | Client/server transactions Web-based ordering |
+            | High-Throughput Data  |    AF11   |          10          |        001010       | Store and forward applications                |
+            | Low-Priority Data     |    CS1    |           8          |        001000       | Any flow that has  no BW assurance            |
+            | Standard              |  DF(CS0)  |           0          |        000000       | Undifferentiated applications                 |
+            | MAX_ALLOWED           |     *     |           *          |          *          | *                                             |
+            
+            (*) There is an additional special service class name defined as `max_allowed`. This is a placeholder for the maximum DSCP value allowed by the Operator (e.g. CS4).
           enum:
-            - CS0
-            - CS1
-            - AF11
-            - AF12
-            - AF13
-            - CS2
-            - AF21
-            - AF22
-            - AF23
-            - CS3
-            - AF31
-            - AF32
-            - AF33
-            - CS4
-            - AF41
-            - AF42
-            - AF43
-            - CS5
-            - EF
-            - CS6
-            - CS7
-            - MAX_ALLOWED
-          example: CS0
+            - real_time_interactive
+            - multimedia_streaming           
+            - broadcast_video
+            - low_latency_data
+            - high_throughput_data
+            - standard
+            - low_priority_data
+            - max_allowed
+          example: real_time_interactive 
         ip_address:
           type: string
           format: ipv4
           pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}?$'
           description: Internal IP address of the connected device in the LAN.
           example: 192.168.1.27
+    ModelError:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          pattern: '^[1-5][0-9][0-9]$'
+          description: HTTP response status code
+        message:
+          type: string
+          description: A human readable description of what the event represent
+    RouterActionsUnavailable:
+      allOf:
+        - type: object
+          required:
+            - code
+          properties:
+            code:
+              type: string
+              enum:
+                - UNAVAILABLE
+                - HOME_DEVICES_QOD.ROUTER_OFFLINE
+              default: UNAVAILABLE
+              description: |-
+                  Service unavailable. Typically the server is down.
+                  Router is not online. Try it later.
+        - $ref: '#/components/schemas/ModelError'
+    DscpConflict:
+      allOf:
+        - type: object
+          required:
+            - code
+          properties:
+            code:
+              type: string
+              enum:
+                - CONFLICT
+                - HOME_DEVICES_QOD.TOO_MANY_DEVICES
+                - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD
+                - HOME_DEVICES_QOD.QOS_TOO_HIGH
+                - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD
+                - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE
+                - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE
+                - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT
+              default: CONFLICT
+              description: Requested QoS can't be applied to the target device because a precondition does not hold
+        - $ref: '#/components/schemas/ModelError'
+    NoDeviceMatch:
+      allOf:
+        - type: object
+          required:
+            - code
+          properties:
+            code:
+              type: string
+              enum:
+                - NOT_FOUND
+                - HOME_DEVICES_QOD.NO_DEVICE_MATCH
+              default: NOT_FOUND
+              description: There is no device matching the input criteria
+        - $ref: '#/components/schemas/ModelError'
+    InvalidTokenContext:
+      allOf:
+        - type: object
+          required:
+            - code
+          properties:
+            code:
+              type: string
+              enum:
+                - PERMISSION_DENIED
+                - HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT
+              default: PERMISSION_DENIED
+              description: User home network cannot be deducted from access token context
+        - $ref: '#/components/schemas/ModelError'
   responses:
     InvalidArgument:
       description: Problem with the client request
@@ -153,16 +236,11 @@ components:
                       - INVALID_ARGUMENT
                     default: INVALID_ARGUMENT
                     description: Client specified an invalid argument, request body or query param.
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "400"
                 code: INVALID_ARGUMENT
                 message: Client specified an invalid argument, request body or query param
     Unauthenticated:
@@ -186,20 +264,18 @@ components:
                       - UNAUTHENTICATED
                     default: UNAUTHENTICATED
                     description: Request not authenticated due to missing, invalid, or expired credentials.
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "401"
                 code: UNAUTHENTICATED
                 message: Request not authenticated due to missing, invalid, or expired credentials
-    PermissionDenied:
-      description: Client does not have sufficient permission
+    setQosPermissionDenied:
+      description: |-
+        Client does not have sufficient permission.
+        In addition to regular PERMISSION_DENIED scenario another scenario may exist:
+          - User home network cannot be deducted from access token context.("code": "HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT","message": "User home network cannot be deducted from access token context.").
       headers:
         x-correlator:
           description: Correlation id for the different services
@@ -208,29 +284,60 @@ components:
       content:
         application/json:
           schema:
-            allOf:
-              - type: object
-                required:
-                  - code
-                properties:
-                  code:
-                    type: string
-                    enum:
-                      - PERMISSION_DENIED
-                    default: PERMISSION_DENIED
-                    description: Client does not have sufficient permissions to perform this action.
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+            $ref: '#/components/schemas/InvalidTokenContext'
           examples:
             response:
               value:
-                code: PERMISSION_DENIED
-                message: Authenticated user has no permission to access the requested resource
+                status: "403"
+                code: HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT
+                message: User home network cannot be deducted from access token context
+    setQosNotFound:
+      description: |-
+        Resource Not Found.
+        In addition to regular scenario of NOT_FOUND, another scenario may exist.
+         - There is no device matching the input criteria. ("code": "HOME_DEVICES_QOD.NO_DEVICE_MATCH","message": "No connected device found for the input criteria provided.").
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NoDeviceMatch'
+          examples:
+            response:
+              value:
+                status: "404"
+                code: HOME_DEVICES_QOD.NO_DEVICE_MATCH
+                message: No connected device found for the input criteria provided
+    setQosConflict:
+      description: |-
+        Requested QoS can't be set. 
+        
+        In addition to regular CONFLICT scenario to handle conflict with the current state of the target resource, another scenarios may exist:
+         - HOME_DEVICES_QOD.TOO_MANY_DEVICES: Exceeded the maximum quantity of devices with non-default QoS behaviour.
+         - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD: RSSI from device is below allowed threshold.
+         - HOME_DEVICES_QOD.QOS_TOO_HIGH: Requested QoS is higher than the maximum QoS allowed.
+         - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD: The occupancy is above the allowed threshold.
+         - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE: Device is not connected to the required interface (e.g. WiFi 5GHz interface).
+         - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE: Device does not support required interface (e.g. WiFi 5GHz interface).
+         - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT: Device QoS is already set to default value.
+      headers:
+        x-correlator:
+          description: Correlation id for the different services
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DscpConflict'
+          examples:
+            response:
+              value:
+                status: "409"
+                code: HOME_DEVICES_QOD.TOO_MANY_DEVICES
+                message: Exceeded the maximum quantity of devices with non-default QoS behaviour
     Internal:
       description: Server error
       headers:
@@ -252,21 +359,17 @@ components:
                       - INTERNAL
                     default: INTERNAL
                     description: Unknown server error.Typically a server bug.
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "500"
                 code: INTERNAL
                 message: Server error
-    RouterActionsUnavailable:
+    setQosServiceUnavailable:
       description: |-
         Service unavailable. Typically the server is down.
+        
         In addition to regular scenario of UNAVAILABLE to handle service availability problems, another scenario may exist.
          - The router is offline ("code": "HOME_DEVICES_QOD.ROUTER_OFFLINE","message": "Router is not online. Try it later.").
       headers:
@@ -277,69 +380,13 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            required:
-              - code
-              - message
-            properties:
-              code:
-                type: string
-                enum:
-                  - UNAVAILABLE
-                  - HOME_DEVICES_QOD.ROUTER_OFFLINE
-                description: |-
-                  Service unavailable. Typically the server is down.
-                  Router is not online. Try it later.
-              message:
-                type: string
-                description: A human readable description of what the event represent
+            $ref: '#/components/schemas/RouterActionsUnavailable'
           examples:
             response:
               value:
-                code: UNAVAILABLE
-                message: Service unavailable
-    DscpConflict:
-      description: |-
-        DSCP value can't be set. In addition to regular CONFLICT scenario to handle conflict with the current state of the target resource, another scenarios may exist:
-         - HOME_DEVICES_QOD.TOO_MANY_DEVICES: Exceeded the maximum quantity of devices with non-default DSCP value.
-         - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD: RSSI from device is below allowed threshold.
-         - HOME_DEVICES_QOD.QOS_TOO_HIGH: DSCP requested is above the maximum QoS permitted.
-         - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD: The occupancy is above the allowed threshold.
-         - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE: Device is not connected to the required interface (e.g. WiFi 5GHz interface).
-         - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE: Device does not support required interface (e.g. WiFi 5GHz interface).
-         - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT: Device DSCP value is already set to default value.
-      headers:
-        x-correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - code
-              - message
-            properties:
-              code:
-                type: string
-                enum:
-                  - HOME_DEVICES_QOD.TOO_MANY_DEVICES
-                  - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD
-                  - HOME_DEVICES_QOD.QOS_TOO_HIGH
-                  - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD
-                  - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE
-                  - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE
-                  - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT
-                description: Device can't be prioritized because a precondition does not hold
-              message:
-                type: string
-                description: A human readable description of what the event represent
-          examples:
-            response:
-              value:
-                code: HOME_DEVICES_QOD.TOO_MANY_DEVICES
-                message: Exceeded the maximum quantity of devices with non-default DSCP value
+                status: "503"
+                code: HOME_DEVICES_QOD.ROUTER_OFFLINE
+                message: Router is not online. Try it later
     Timeout:
       description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
       headers:
@@ -361,56 +408,20 @@ components:
                       - TIMEOUT
                     default: TIMEOUT
                     description: Request timeout exceeded
-              - type: object
-                required:
-                  - message
-                properties:
-                  message:
-                    type: string
-                    description: A human readable description of what the event represent
+              - $ref: '#/components/schemas/ModelError'
           examples:
             response:
               value:
+                status: "504"
                 code: TIMEOUT
-                message: Request timeout exceeded. If it happens repeatedly, consider reducing the request complexity
-    NoDeviceMatch:
-      description: |-
-        Resource Not Found.
-        In addition to regular scenario of NOT_FOUND, another scenario may exist.
-         - There is no device matching the input criteria. ("code": "HOME_DEVICES_QOD.NO_DEVICE_MATCH","message": "No connected device found for the input criteria provided.").
-      headers:
-        x-correlator:
-          description: Correlation id for the different services
-          schema:
-            type: string
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - code
-              - message
-            properties:
-              code:
-                type: string
-                enum:
-                  - HOME_DEVICES_QOD.NO_DEVICE_MATCH
-                description: There is no device matching the input criteria
-              message:
-                type: string
-                description: A human readable description of what the event represent
-          examples:
-            response:
-              value:
-                code: HOME_DEVICES_QOD.NO_DEVICE_MATCH
-                message: No connected device found for the input criteria provided
+                message: Request timeout exceeded
   securitySchemes:
     three_legged:
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
 security:
   - three_legged:
-    - home-devices-qod-dscp-write
+    - home-devices-qod-qos-write
 tags:
   - name: Home Devices QoD
     description: QoD control operations for home devices
