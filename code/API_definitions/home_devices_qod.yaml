@@ -71,21 +71,21 @@ paths:
               $ref: '#/components/headers/x-correlator'
           description: Requested QoS passed all validations and was applied
         '400':
-          $ref: '#/components/responses/Error400InvalidArgument'
+          $ref: '#/components/responses/Generic400'
         '401':
-          $ref: '#/components/responses/Error401Unauthenticated'
+          $ref: '#/components/responses/Generic401'
         '403':
-          $ref: '#/components/responses/setQosPermissionDenied'
+          $ref: '#/components/responses/setQosPermissionDenied403'
         '404':
-          $ref: '#/components/responses/setQosNotFound'
+          $ref: '#/components/responses/setQosNotFound404'
         '409':
-          $ref: '#/components/responses/setQosConflict'
+          $ref: '#/components/responses/setQosConflict409'
         '500':
-          $ref: '#/components/responses/Error500Internal'
+          $ref: '#/components/responses/Generic500'
         '503':
-          $ref: '#/components/responses/setQosServiceUnavailable'
+          $ref: '#/components/responses/setQosServiceUnavailable503'
         '504':
-          $ref: '#/components/responses/Error504Timeout'
+          $ref: '#/components/responses/Generic504'
 components:
   schemas:
     QosOnDemandUpdate:
@@ -143,7 +143,7 @@ components:
           type: string
           description: A human readable description of what the event represents
   responses:
-    Error400InvalidArgument:
+    Generic400:
       description: Problem with the client request
       headers:
         x-correlator:
@@ -152,13 +152,11 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            InvalidArgument:
-              value:
-                status: 400
-                code: INVALID_ARGUMENT
-                message: Client specified an invalid argument, request body or query param
-    Error401Unauthenticated:
+          example:
+            status: 400
+            code: INVALID_ARGUMENT
+            message: Client specified an invalid argument, request body or query param
+    Generic401:
       description: Authentication problem with the client request
       headers:
         x-correlator:
@@ -167,13 +165,11 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            Unauthenticated:
-              value:
-                status: 401
-                code: UNAUTHENTICATED
-                message: Request not authenticated due to missing, invalid, or expired credentials
-    setQosPermissionDenied:
+          example:
+            status: 401
+            code: UNAUTHENTICATED
+            message: Request not authenticated due to missing, invalid, or expired credentials
+    setQosPermissionDenied403:
       description: |-
         Client does not have sufficient permission.
         In addition to regular PERMISSION_DENIED scenario another scenario may exist:
@@ -196,7 +192,7 @@ components:
                 status: 403
                 code: HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT
                 message: User home network cannot be deducted from access token context
-    setQosNotFound:
+    setQosNotFound404:
       description: |-
         Resource Not Found.
         In addition to regular scenario of NOT_FOUND, another scenario may exist.
@@ -219,7 +215,7 @@ components:
                 status: 404
                 code: HOME_DEVICES_QOD.NO_DEVICE_MATCH
                 message: No connected device found for the input criteria provided
-    setQosConflict:
+    setQosConflict409:
       description: |-
         Requested QoS can't be set. 
         
@@ -279,7 +275,7 @@ components:
                 status: 409
                 code: HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT
                 message: Device QoS is already set to default value
-    Error500Internal:
+    Generic500:
       description: Server error
       headers:
         x-correlator:
@@ -288,13 +284,11 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            Internal:
-              value:
-                status: 500
-                code: INTERNAL
-                message: Server error
-    setQosServiceUnavailable:
+          example:
+            status: 500
+            code: INTERNAL
+            message: Server error
+    setQosServiceUnavailable503:
       description: |-
         Service unavailable. Typically the server is down.
         
@@ -318,7 +312,7 @@ components:
                 status: 503
                 code: HOME_DEVICES_QOD.ROUTER_OFFLINE
                 message: Router is not online. Try it later
-    Error504Timeout:
+    Generic504:
       description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
       headers:
         x-correlator:
@@ -327,12 +321,10 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorInfo"
-          examples:
-            Timeout:
-              value:
-                status: 504
-                code: TIMEOUT
-                message: Request timeout exceeded
+          example:
+            status: 504
+            code: TIMEOUT
+            message: Request timeout exceeded
   parameters:
     x-correlator:
       name: x-correlator
