@@ -1,0 +1,56 @@
+# Camara Home Devices QoD meeting
+
+## Meeting Information
+
+> Meeting Date: 16/03/2023
+
+### Attendees
+
+* Mona Mokhber (Telefonica)
+* Diego Rivera Nuñez (Telefonica)
+* Eber Marins (Telefonica)
+* Christian Duran Gonzalez (Telefonica)
+* Rafal Artych (DT)
+* "Mike" - Mihai Lazar (DELL)
+
+### Agenda
+
+* Recap & Recent Updates
+* Update on issues 
+* AOB
+
+Home Devices QoD minutes link:<br>
+[https://github.com/camaraproject/HomeDevicesQoD/tree/main/documentation/MeetingMinutes](https://github.com/camaraproject/HomeDevicesQoD/tree/main/documentation/MeetingMinutes)
+
+## Discussion Items
+
+- Repo: [https://github.com/camaraproject/HomeDevicesQoD](https://github.com/camaraproject/HomeDevicesQoD)<br>
+- Issues: [https://github.com/camaraproject/HomeDevicesQoD/issues](https://github.com/camaraproject/HomeDevicesQoD/issues)<br>
+- Pull Requests: [https://github.com/camaraproject/HomeDevicesQoD/pulls](https://github.com/camaraproject/HomeDevicesQoD/pulls)
+
+
+| Agenda Item | Description | 
+| ----------- | ------------|
+| **Recap/Updates** |  |
+|  | <li>[#33](https://github.com/camaraproject/HomeDevicesQoD/issues/33) created to align the API with the new guideline agreements|
+| **Open Issues** | |
+|  | [#18](https://github.com/camaraproject/HomeDevicesQoD/issues/18) Update API documentation according to v0.2.0 API version <br>~~Being addressed in PR [#19](https://github.com/camaraproject/HomeDevicesQoD/pull/19)~~.<br>PR [#19](https://github.com/camaraproject/HomeDevicesQoD/pull/19) has been MERGED to `dev-v0.2.0` branch with current documentation status (i.e. NOT including Doc changes related to issue [#23](https://github.com/camaraproject/HomeDevicesQoD/issues/23) and PR [#25](https://github.com/camaraproject/HomeDevicesQoD/pull/25)).<br>This is part of the process described in issue [#27](https://github.com/camaraproject/HomeDevicesQoD/issues/27) to adapt the project to the release/versioning policy agreed in Commonalities, i.e. the `main` branch is assumed to be the latest. Documentation work corresponding to API release v0.2.0 (when resumed) will be done against the `main' branch until release v0.2.0 is agreed to be closed.<br><br>On the other hand, there is a new issue in the Commonalities project [Revisit API documentation template to reduce redundancy #164](https://github.com/camaraproject/WorkingGroups/issues/164) that affects this. Basically because the way the CAMARA APIs are documented is being rethought. It is proposed not to have separate documentation at all, but to embed all documentation in the OAS definition itself (YAML). The Home Devices QoD spec file is already quite self-documented, so I'll wait for the final agreement in Commonalities to complete the documentation for release 0.2.0 to avoid unnecessary overhead. |
+|  | [#20](https://github.com/camaraproject/HomeDevicesQoD/issues/20) Update commonalities glossary with HomeDevicesQoD-subproject relevant terms <br>It is related to Commonalities issue [#120](https://github.com/camaraproject/WorkingGroups/pull/120).<br><br>Added "Service Class" as a representative term for this API.|
+| **New Issues** |  |
+|  | [#33](https://github.com/camaraproject/HomeDevicesQoD/issues/33) Align API spec format with the latest Commonalities agreements<br>This issue is to align API spec format with the latest Commonalities agreements<li> Commonalities - adjust the error `status` field, which will eventually be an integer (not a patterned string): PR [#145](https://github.com/camaraproject/WorkingGroups/pull/145).<li> Commonalities - adjust the schema references in the errors responses and apply the agreed solution: Issue [#151](https://github.com/camaraproject/WorkingGroups/issues/151) & PR [#162](https://github.com/camaraproject/WorkingGroups/pull/162).<li> Commonalities - change the format of the API fields to lowerCamelCase: Issue [#157](https://github.com/camaraproject/WorkingGroups/issues/157), Discussion [#169](https://github.com/camaraproject/WorkingGroups/discussions/169) & PR [#171](https://github.com/camaraproject/WorkingGroups/pull/171).<br>The changes were approved by Ludovic (Orange) pending to be approved by Rafal (DT) in order to get merged.  |
+| **AOB** | |
+|  | <li>Next Home Devices QoD community call on Apr 13th, UTC 16:00, CET 17:00 |
+
+
+## Next Steps
+
+* [PR#34](https://github.com/camaraproject/HomeDevicesQoD/pull/34) to get approved by pending reviewers and will be merged and closed afterwards (along with its related [issue#33](https://github.com/camaraproject/HomeDevicesQoD/issues/33))
+
+* The note from last meeting is still pending: 
+***"Generate the first stable API release and continue with the CAMARA milestones to complete it, as no further functionality will be added for the time being."***
+
+* No furthur issues were discussed during the meeting.
+
+<br>
+
+> Mailinglist:<br>Please subscribe if not yet done to the mailing list of the subproject here: [https://lists.camaraproject.org/g/sp-hdp](https://lists.camaraproject.org/g/sp-hdp)<br>The list will be used for invitations and discussions between members of the sub project. The address is: sp-hdp@lists.camaraproject.org
