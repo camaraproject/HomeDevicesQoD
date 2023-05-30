@@ -1,7 +1,7 @@
-# *To Be Deprecated: The core API documentation is now included as part of the OpenAPI spec*
+## *To Be Deprecated: The core API documentation is now included as part of the OpenAPI spec.*
 
+<br>
 
-- [*To Be Deprecated: The core API documentation is now included as part of the OpenAPI spec*](#to-be-deprecated-the-core-api-documentation-is-now-included-as-part-of-the-openapi-spec)
 - [1. Overview](#1-overview)
   - [1.1. Introduction](#11-introduction)
   - [1.2. Quick Start](#12-quick-start)
