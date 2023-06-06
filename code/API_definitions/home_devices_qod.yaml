@@ -1,27 +1,52 @@
 openapi: 3.0.3
 info:
   title: Home Devices QoD
-  description: |-
-    Service Enabling Network Function API for *QoS-on-demand* (QoD) control applied to devices connected to the user home network. API clients can request to change, on demand, the desired QoS behaviour for the IP traffic corresponding to a specific user home device. The QoS behaviour is determined by the Service Class provided by the API Client, which is mapped to a DSCP value according to [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines.
+  description: |
+    Service Enabling Network Function API for *QoS-on-demand* (QoD) control applied to devices connected to the user's home network. API clients can request to change, on demand, the desired QoS behaviour for the IP traffic corresponding to a specific user home device. The QoS behaviour is determined by the Service Class provided by the API Client, which is mapped to a DSCP value according to [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines.
 
-    # Relevant Definitions and concepts
+    # Introduction
 
-    - **Home Devices**: User devices connected to the user home network.
-    - **NaaS**: *Network-as-a-Service* model where Telco Network resources are exposed to third parties through APIs. In this particular API, QoD operations for home devices are exposed following this model.
-    - **Service Class**: A statement of the required QoS characteristics of a traffic aggregate. Conceptually, a service class refers to applications with similar characteristics and performance requirements.
-    - **DSCP**: *Differentiated Services (DiffServ) Code Point*. DiffServ is a simple and scalable mechanism for classifying and managing network traffic and providing quality of service (QoS) on IP networks. The DSCP value will be used to classify the traffic of the target home device in order to be treated accordingly. 
+    It may be useful for application developers to request on-demand QoS behaviours (service classes) to be configured at the user's home WiFi access point to ensure the required quality of experience for those services/applications running on a specific home device.
+
+    For example, the QoD control capability could be useful in scenarios such as:
+
+    - A user using head-mounted display device for VR/AR applications. VR/AR applications require high bandwidth for the big amount of data to be streamed.
+    - A user using VoIP application in a home device. Lower latency improves call quality or avoids dropped calls.
+
+    Generally speaking, QoS on demand may improve the qualty of experience for real time services like Videocomms, Cloud Gaming and Virtual Reality. 
+
+    ![Videocomms DSCP usage example](https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/main/documentation/API_documentation/resources/videocomm_dscp_example.png)
+
+    # Relevant terms and definitions
+
+    - **Home Device**: 
+    User device connected to the user's home network.
+    
+    - **NaaS**: 
+    *Network-as-a-Service* model where Telco Network resources are exposed to third parties through APIs. In this particular API, QoD operations for home devices are exposed following this model.
+    
+    - **Service Class**: 
+    A statement of the required QoS characteristics of a traffic aggregate. Conceptually, a service class refers to applications with similar characteristics and performance requirements.
+    
+    - **DSCP**: 
+    *Differentiated Services (DiffServ) Code Point*. DiffServ is a simple and scalable mechanism for classifying and managing network traffic and providing quality of service (QoS) on IP networks. The DSCP value will be used to classify the traffic of the target home device in order to be treated accordingly. 
 
     # API Functionality
 
-    This API allows to third party clients to set, on demand, the desired QoS behaviour (service class) associated to the traffic of the device connected to the user home network that matches the input criteria provided. The device traffic is classified (by DSCP) and treated accordingly.
+    This API allows to third party clients to set, on demand, the desired QoS behaviour (service class) associated to the traffic of the device connected to the user's home network that matches the input criteria provided. The device traffic is classified (by DSCP) and treated accordingly.
      
-    - **NOTE: This API allows QoS treatment to be applied to a target user device only within the user Home Network (i.e. between the device and the home router)**.
+    - **NOTE: The scope of the API is as follows**:
+      - QoS treatment is applied to a target user device **only within the user's home network** (i.e., between the device and the home router)
+      - QoS treatment **only applies to downstream IP traffic** (i.e., from the home router to the target device)
+      - QoS treatment **only applies to home devices using WiFi access** (i.e., home router WiFi interface)
 
-    # Resources and Operations overview
-
-    The API provides a single endpoint:
+    The API provides a single endpoint/operation:
      
-    - An endpoint to set the desired QoS behaviour for the traffic corresponding to the user home device matching the input criteria.
+    - Set the desired QoS behaviour for a user home device.
+
+     # Further info and support
+
+    (FAQs will be added in a later version of the documentation)
   termsOfService: http://example.com/terms/
   contact:
     name: API Support
@@ -44,7 +69,7 @@ paths:
   /qos:
     put:
       summary: Set the desired QoS behaviour for a user home device
-      description: |-
+      description: |
         Set the desired QoS behaviour for the traffic corresponding to the user home device matching the input criteria. **QoS behaviour is determined by the service class provided by the API Client. Setting `standard` service class restores default traffic treatment for the target home device.**
         
         - The operation is executed for the user whose `sub` is in the access token used to call this endpoint, and for the home network also deducted from the information included in the access token.
@@ -97,7 +122,7 @@ components:
       properties:
         serviceClass:
           type: string
-          description: |-
+          description: |
             The name of the service class requested by the API client. It is associated with QoS behaviours optimised for a particular application type. Each service class is mapped to a DSCP value according to [RFC4594](https://datatracker.ietf.org/doc/html/rfc4594) guidelines. The DSCP value is used to classify the target home device's traffic so that it can be treated accordingly (i.e. to meet its QoS needs).
             
             The following service classes are supported:
@@ -170,7 +195,7 @@ components:
             code: UNAUTHENTICATED
             message: Request not authenticated due to missing, invalid, or expired credentials
     setQosPermissionDenied403:
-      description: |-
+      description: |
         Client does not have sufficient permission.
         In addition to regular PERMISSION_DENIED scenario another scenario may exist:
           - User home network cannot be deducted from access token context.("code": "HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT","message": "User home network cannot be deducted from access token context.").
@@ -193,7 +218,7 @@ components:
                 code: HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT
                 message: User home network cannot be deducted from access token context
     setQosNotFound404:
-      description: |-
+      description: |
         Resource Not Found.
         In addition to regular scenario of NOT_FOUND, another scenario may exist.
          - There is no device matching the input criteria. ("code": "HOME_DEVICES_QOD.NO_DEVICE_MATCH","message": "No connected device found for the input criteria provided.").
@@ -216,7 +241,7 @@ components:
                 code: HOME_DEVICES_QOD.NO_DEVICE_MATCH
                 message: No connected device found for the input criteria provided
     setQosConflict409:
-      description: |-
+      description: |
         Requested QoS can't be set. 
         
         In addition to regular CONFLICT scenario to handle conflict with the current state of the target resource, another scenarios may exist:
@@ -289,7 +314,7 @@ components:
             code: INTERNAL
             message: Server error
     setQosServiceUnavailable503:
-      description: |-
+      description: |
         Service unavailable. Typically the server is down.
         
         In addition to regular scenario of UNAVAILABLE to handle service availability problems, another scenario may exist.
@@ -339,6 +364,10 @@ components:
         type: string
   securitySchemes:
     three_legged:
+      description: |
+        OAuth 2.0 3-legged access tokens must be used by API clients to invoke this API with dedicated scope. The API client must authenticate on behalf of a specific user to use this service. This can be done via IP-based authentication (i.e. using the public IP of the device in this case).
+        
+        The 3-legged access of the Home Devices QoD API could also be combined with end-user consent management, depending on the legal basis applied. User consent would be required before personal data is processed by API clients for a specific purpose.
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
 security:
