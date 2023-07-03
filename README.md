@@ -23,10 +23,10 @@ Repository to describe, develop, document and test the HomeDevicesQoD API family
 
 ## Results and Status
 * Sub Project is in progress.
-* The latest release and version of Home Devices QoD API is 0.1.0.
-* Version 0.1.0 of the API is available within the [release-0.1.0](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.1.0) branch:
-  * API [definition](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.1.0/code/API_definitions)
-  * API [documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.1.0/documentation/API_documentation)
+* The latest release and version of Home Devices QoD API is 0.2.0.
+* Version 0.2.0 of the API is available within the [release-0.2.0](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0) branch:
+  * API [definition](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/code/API_definitions)
+  * API [documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/documentation/API_documentation)
   * For changes see [CHANGELOG.md](https://github.com/camaraproject/HomeDevicesQoD/blob/main/CHANGELOG.md)
 
 ## Contributorship and mailing list
