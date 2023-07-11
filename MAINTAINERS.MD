@@ -4,5 +4,5 @@
 | Orange | Ludovic Robert |
 | Scenera | Andrew Wajs|
 | Telefonica | Jesús Peña |
-| Telefónica | Mona Mokhber |
+| Telefónica | Fernando Prado |
 | Deutsche Telekom | Rafal Artych |
