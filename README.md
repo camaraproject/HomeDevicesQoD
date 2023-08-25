@@ -21,13 +21,17 @@ Repository to describe, develop, document and test the HomeDevicesQoD API family
 * Schedule: bi-weekly, Thursday, 4:30pm CET
 * Meeting link: <a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_NzJkZDc4MjktNjU1YS00NzYxLWExNzgtZDlmNzI5MmMxMGNi%40thread.v2/0?context=%7b%22Tid%22%3a%229744600e-3e04-492e-baa1-25ec245c6f10%22%2c%22Oid%22%3a%22458d45b0-4ca7-41e2-a7b3-3d722abf4468%22%7d">Microsoft Teams Meeting</a> 
 
-## Results and Status
-* Sub Project is in progress.
+## Status & released versions
+* Note: Please be aware that the project will have updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest available release**.
 * The latest release and version of Home Devices QoD API is 0.2.0.
 * Version 0.2.0 of the API is available within the [release-0.2.0](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0) branch:
-  * API [definition](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/code/API_definitions)
-  * API [documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/documentation/API_documentation)
+  * API definition **with inline documentation**:
+    * OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
+    * [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml&nocors)
+    * [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
+  * API additional [related documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/documentation/API_documentation)
   * For changes see [CHANGELOG.md](https://github.com/camaraproject/HomeDevicesQoD/blob/main/CHANGELOG.md)
+* The previous version v0.1.0 of the HomeDevicesQoD API is available within the [release-0.1.0 branch](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.1.0).
 
 ## Contributorship and mailing list
 * To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/sp-hdp>.

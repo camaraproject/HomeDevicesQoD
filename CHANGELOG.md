@@ -11,8 +11,12 @@
 # v0.2.0
 
 **This is the first alpha release of Home Devices QoD API**.
-- API [definition](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/code/API_definitions)
-- API [documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/documentation/API_documentation)
+
+- API definition **with inline documentation**:
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
+- API additional [related documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/documentation/API_documentation)
 
 ## Please note 
 - This is an alpha version, it should be considered as a draft.
@@ -43,7 +47,11 @@
 # v0.1.0 - Initial contribution
 
 **Initial contribution of the API definition for *QoS-on-demand* (QoD) control applied to devices connected to the user home network**, including initial API documentation.
-- API [definition](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.1.0/code/API_definitions)
+
+- API definition:
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.1.0/code/API_definitions/home_devices_qod.yaml)
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.1.0/code/API_definitions/home_devices_qod.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.1.0/code/API_definitions/home_devices_qod.yaml)
 - API [documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.1.0/documentation/API_documentation)
 
 ## Please note 
