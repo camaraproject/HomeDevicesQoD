@@ -17,8 +17,9 @@ Repository to describe, develop, document and test the HomeDevicesQoD API family
 * Location: virtually  
 
 ## Meetings
-* Meetings are held virtually
-* Schedule: bi-weekly, Thursday, 4:30pm CET
+* Meetings are held virtually.
+* Schedule: ~~bi-weekly~~ on demand(*), Thursday, 4:30pm CET.
+  * **(*)NOTE: The project is currently stable, so meetings will be scheduled according to the needs of the working group participants. Offline updates will be provided on the mailing list as needed instead.** If anyone in the working group would like to have one of the following meetings, please send an email to the list and/or open a new issue in the repository so that everyone can keep track of new topics to discuss. 
 * Meeting link: <a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_NzJkZDc4MjktNjU1YS00NzYxLWExNzgtZDlmNzI5MmMxMGNi%40thread.v2/0?context=%7b%22Tid%22%3a%229744600e-3e04-492e-baa1-25ec245c6f10%22%2c%22Oid%22%3a%22458d45b0-4ca7-41e2-a7b3-3d722abf4468%22%7d">Microsoft Teams Meeting</a> 
 
 ## Status & released versions
