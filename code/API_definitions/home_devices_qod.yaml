@@ -22,9 +22,6 @@ info:
     - **Home Device**: 
     User device connected to the user's home network.
     
-    - **NaaS**: 
-    *Network-as-a-Service* model where Telco Network resources are exposed to third parties through APIs. In this particular API, QoD operations for home devices are exposed following this model.
-    
     - **Service Class**: 
     A statement of the required QoS characteristics of a traffic aggregate. Conceptually, a service class refers to applications with similar characteristics and performance requirements.
     
@@ -44,27 +41,32 @@ info:
      
     - Set the desired QoS behaviour for a user home device.
 
+    # Authorization and authentication
+
+    CAMARA guidelines defines a set of authorization flows which can grant API clients access to the API functionality, as outlined in the document [CAMARA-API-access-and-user-consent.md](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md). Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+
+    It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
+
+    In the case of the Home Devices QoD API scenario and according to the API definition, 3-legged access tokens must be used by API clients to invoke this API with dedicated scope. The API client must authenticate on behalf of a specific user to use this service. This can be done via IP-based authentication (i.e. using the public IP of the device in this case).
+        
+    The 3-legged access of the Home Devices QoD API could also be combined with end-user consent management, depending on the legal basis applied. User consent would be required before personal data is processed by API clients for a specific purpose.
+
      # Further info and support
 
     (FAQs will be added in a later version of the documentation)
-  termsOfService: http://example.com/terms/
+  termsOfService: http://swagger.io/terms/
   contact:
-    name: API Support
-    url: http://www.example.com/support
-    email: support@example.com
+    email: project-email@sample.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.2.0
+  version: 0.3.0
 servers:
-  - url: https://{host}{basePath}
+  - url: "{apiRoot}/home-devices-qod/v0"
     variables:
-      host:
-        default: api.example.com
-        description: Host that serves the API
-      basePath:
-        default: /home-devices-qod/v0
-        description: API URL prefix for all API paths
+      apiRoot:
+        default: http://localhost:9091
+        description: API root, defined by the service provider, e.g. `api.example.com` or `api.example.com/somepath`
 paths:
   /qos:
     put:
@@ -79,43 +81,43 @@ paths:
         - Home Devices QoD
       operationId: setQos
       parameters:
-        - $ref: '#/components/parameters/x-correlator'
+        - $ref: "#/components/parameters/x-correlator"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QosOnDemandUpdate'
+              $ref: "#/components/schemas/QosOnDemandUpdate"
             example: 
               serviceClass: real_time_interactive
               ipAddress: 192.168.1.27
         required: true
       responses:
-        '204':
+        "204":
           headers:
             x-correlator:
-              $ref: '#/components/headers/x-correlator'
+              $ref: "#/components/headers/x-correlator"
           description: Requested QoS passed all validations and was applied
-        '400':
-          $ref: '#/components/responses/Generic400'
-        '401':
-          $ref: '#/components/responses/Generic401'
-        '403':
-          $ref: '#/components/responses/setQosPermissionDenied403'
-        '404':
-          $ref: '#/components/responses/setQosNotFound404'
-        '409':
-          $ref: '#/components/responses/setQosConflict409'
-        '500':
-          $ref: '#/components/responses/Generic500'
-        '503':
-          $ref: '#/components/responses/setQosServiceUnavailable503'
-        '504':
-          $ref: '#/components/responses/Generic504'
+        "400":
+          $ref: "#/components/responses/Generic400"
+        "401":
+          $ref: "#/components/responses/Generic401"
+        "403":
+          $ref: "#/components/responses/setQosPermissionDenied403"
+        "404":
+          $ref: "#/components/responses/setQosNotFound404"
+        "409":
+          $ref: "#/components/responses/setQosConflict409"
+        "500":
+          $ref: "#/components/responses/Generic500"
+        "503":
+          $ref: "#/components/responses/setQosServiceUnavailable503"
+        "504":
+          $ref: "#/components/responses/Generic504"
 components:
   schemas:
     QosOnDemandUpdate:
       type: object
-      description: Payload to change the QoS behaviour associated to a device.
+      description: Payload to change the QoS behaviour associated to a home device.
       required:
         - serviceClass
         - ipAddress
@@ -134,7 +136,7 @@ components:
             | Broadcast Video       |    CS3    |          24          |        011000       | Broadcast TV & live events                    |
             | Low-Latency Data      |    AF21   |          18          |        010010       | Client/server transactions Web-based ordering |
             | High-Throughput Data  |    AF11   |          10          |        001010       | Store and forward applications                |
-            | Low-Priority Data     |    CS1    |           8          |        001000       | Any flow that has  no BW assurance            |
+            | Low-Priority Data     |    CS1    |           8          |        001000       | Any flow that has no BW assurance             |
             | Standard              |  DF(CS0)  |           0          |        000000       | Undifferentiated applications                 |
           enum:
             - real_time_interactive
@@ -148,7 +150,6 @@ components:
         ipAddress:
           type: string
           format: ipv4
-          pattern: '^([01]?\d\d?|2[0-4]\d|25[0-5])(?:\.(?:[01]?\d\d?|2[0-4]\d|25[0-5])){3}?$'
           description: Internal IP address of the connected device in the LAN.
           example: 192.168.1.27
     ErrorInfo:
@@ -172,7 +173,7 @@ components:
       description: Problem with the client request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -185,7 +186,7 @@ components:
       description: Authentication problem with the client request
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -201,7 +202,7 @@ components:
           - User home network cannot be deducted from access token context.("code": "HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT","message": "User home network cannot be deducted from access token context.").
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -224,7 +225,7 @@ components:
          - There is no device matching the input criteria. ("code": "HOME_DEVICES_QOD.NO_DEVICE_MATCH","message": "No connected device found for the input criteria provided.").
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -254,7 +255,7 @@ components:
          - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT: Device QoS is already set to default value.
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -304,7 +305,7 @@ components:
       description: Server error
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -321,7 +322,7 @@ components:
          - The router is offline ("code": "HOME_DEVICES_QOD.ROUTER_OFFLINE","message": "Router is not online. Try it later.").
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -341,7 +342,7 @@ components:
       description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
       headers:
         x-correlator:
-          $ref: '#/components/headers/x-correlator'
+          $ref: "#/components/headers/x-correlator"
       content:
         application/json:
           schema:
@@ -363,16 +364,16 @@ components:
       schema:
         type: string
   securitySchemes:
-    three_legged:
+    openId:
       description: |
-        OAuth 2.0 3-legged access tokens must be used by API clients to invoke this API with dedicated scope. The API client must authenticate on behalf of a specific user to use this service. This can be done via IP-based authentication (i.e. using the public IP of the device in this case).
+        OpenID Connect 3-legged access tokens must be used by API clients to invoke this API with dedicated scope. The API client must authenticate on behalf of a specific user to use this service. This can be done via IP-based authentication (i.e. using the public IP of the device in this case).
         
         The 3-legged access of the Home Devices QoD API could also be combined with end-user consent management, depending on the legal basis applied. User consent would be required before personal data is processed by API clients for a specific purpose.
       type: openIdConnect
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
 security:
-  - three_legged:
-    - home-devices-qod-qos-write
+  - openId:
+    - home-devices-qod:qos:write
 tags:
   - name: Home Devices QoD
     description: QoD control operations for home devices
