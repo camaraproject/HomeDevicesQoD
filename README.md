@@ -24,15 +24,14 @@ Repository to describe, develop, document and test the HomeDevicesQoD API family
 
 ## Status & released versions
 * Note: Please be aware that the project will have updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until a new release is created. For example, changes may be reverted before a release is created. **For best results, use the latest available release**.
-* The latest release and version of Home Devices QoD API is 0.2.0.
-* Version 0.2.0 of the API is available within the [release-0.2.0](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0) branch:
+* The latest available and released version 0.3.0 is available within the [release-0.3.0 branch](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.3.0):
   * API definition **with inline documentation**:
-    * OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
-    * [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml&nocors)
-    * [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
-  * API additional [related documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/documentation/API_documentation)
-  * For changes see [CHANGELOG.md](https://github.com/camaraproject/HomeDevicesQoD/blob/main/CHANGELOG.md)
-* The previous version v0.1.0 of the HomeDevicesQoD API is available within the [release-0.1.0 branch](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.1.0).
+    * OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.3.0/code/API_definitions/home_devices_qod.yaml)
+    * [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.3.0/code/API_definitions/home_devices_qod.yaml&nocors)
+    * [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.3.0/code/API_definitions/home_devices_qod.yaml)
+  * API additional [related documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.3.0/documentation/API_documentation)
+* The previous released version v0.2.0 is available within the [release-0.2.0 branch](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0).
+* For changes see [CHANGELOG.md](https://github.com/camaraproject/HomeDevicesQoD/blob/main/CHANGELOG.md)
 
 ## Contributorship and mailing list
 * To subscribe / unsubscribe to the mailing list of this Sub Project and thus be / resign as Contributor please visit <https://lists.camaraproject.org/g/sp-hdp>.

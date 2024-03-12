@@ -5,8 +5,45 @@
 
 - [v0.1.0 - Initial contribution](#v010---initial-contribution)
 - [v0.2.0](#v020)
+- [v0.3.0](#v030)
 
 **Please be aware that the project will have frequent updates to the main branch. There are no compatibility guarantees associated with code in any branch, including main, until it has been released. For example, changes may be reverted before a release is published. For the best results, use the latest published release.**
+
+# v0.3.0
+
+**This is the second alpha release of Home Devices QoD API**.
+
+- API definition **with inline documentation**:
+  - OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.3.0/code/API_definitions/home_devices_qod.yaml)
+  - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.3.0/code/API_definitions/home_devices_qod.yaml&nocors)
+  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.3.0/code/API_definitions/home_devices_qod.yaml)
+- API additional [related documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.3.0/documentation/API_documentation)
+
+## Please note 
+
+- This release includes changes to be compliant with the [Design Guidelines](https://github.com/camaraproject/Commonalities/blob/release-0.3.0/documentation/API-design-guidelines.md) and other documents in [release v0.3 of CAMARA Commonalities](https://github.com/camaraproject/Commonalities/tree/release-0.3.0).
+- This is another v0.x release and further releases before the first stable major v1.x release might introduce breaking changes (e.g. API changes to align with Commonalities updates)
+
+### Added
+
+* Adopt linting rules tooling as described in [Implementation Guideline](https://github.com/camaraproject/Commonalities/blob/release-0.3.0/documentation/API-linting-Implementation-Guideline.md) by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/58
+  
+### Changed
+
+* Align API spec format with the latest Commonalities agreements (last version - [release v0.3.0](https://github.com/camaraproject/Commonalities/releases/tag/v0.3.0)) by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/58
+
+### Fixed
+
+* N/A
+
+### Removed
+
+* N/A
+
+## New Contributors
+* N/A
+
+**Full Changelog**: https://github.com/camaraproject/HomeDevicesQoD/compare/v0.2.0...v0.3.0
 
 # v0.2.0
 
