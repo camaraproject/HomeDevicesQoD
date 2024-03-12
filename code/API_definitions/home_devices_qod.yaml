@@ -373,7 +373,7 @@ components:
       openIdConnectUrl: https://example.com/.well-known/openid-configuration
 security:
   - openId:
-    - home-devices-qod:qos:write
+      - home-devices-qod:qos:write
 tags:
   - name: Home Devices QoD
     description: QoD control operations for home devices
