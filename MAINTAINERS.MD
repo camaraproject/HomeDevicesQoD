@@ -1,8 +1,8 @@
-| Organization                    | Name                                                |
-| -----------------------| ----------------------------------------------------|
-| Orange | Sylvain Morel |
-| Orange | Ludovic Robert |
-| Scenera | Andrew Wajs|
-| Telefonica | Jesús Peña |
-| Telefónica | Fernando Prado |
-| Deutsche Telekom | Rafal Artych |
+| Organization           | Name                     | GitHub Username           |
+| -----------------------|-------------------------|---------------------------|
+| Orange | Sylvain Morel | SylMOREL |
+| Orange | Ludovic Robert | bigludo7 |
+| Scenera | Andrew Wajs | awajs |
+| Telefonica | Jesús Peña | jpengar |
+| Telefónica | Fernando Prado | fernandopradocabrillo |
+| Deutsche Telekom | Rafal Artych | rartych |
