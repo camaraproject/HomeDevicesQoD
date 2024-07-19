@@ -43,7 +43,9 @@ info:
 
     # Authorization and authentication
 
-    CAMARA guidelines defines a set of authorization flows which can grant API clients access to the API functionality, as outlined in the document [CAMARA-API-access-and-user-consent.md](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-API-access-and-user-consent.md). Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
+    [Camara Security and Interoperability Profile](https://github.com/camaraproject/IdentityAndConsentManagement/blob/main/documentation/CAMARA-Security-Interoperability.md) provides details on how a client requests an access token.
+
+    Which specific authorization flows are to be used will be determined during onboarding process, happening between the API Client and the Telco Operator exposing the API, taking into account the declared purpose for accessing the API, while also being subject to the prevailing legal framework dictated by local legislation.
 
     It is important to remark that in cases where personal user data is processed by the API, and users can exercise their rights through mechanisms such as opt-in and/or opt-out, the use of 3-legged access tokens becomes mandatory. This measure ensures that the API remains in strict compliance with user privacy preferences and regulatory obligations, upholding the principles of transparency and user-centric data control.
 
@@ -60,9 +62,10 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-  version: 0.3.0
+  version: 0.4.0-rc.1
+  x-camara-commonalities: 0.4.0
 servers:
-  - url: "{apiRoot}/home-devices-qod/v0"
+  - url: "{apiRoot}/home-devices-qod/v0.4rc1"
     variables:
       apiRoot:
         default: http://localhost:9091
@@ -155,22 +158,22 @@ components:
     ErrorInfo:
       type: object
       required:
+        - message
         - status
         - code
-        - message
       properties:
-        status:
-          type: integer
-          description: HTTP status code returned along with this error response
-        code:
-          type: string
-          description: A code value within the allowed set of values for this error
         message:
           type: string
-          description: A human readable description of what the event represents
+          description: A human readable description of what the event represent
+        status:
+          type: integer
+          description: HTTP response status code
+        code:
+          type: string
+          description: Friendly Code to describe the error
   responses:
     Generic400:
-      description: Problem with the client request
+      description: Bad Request
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -183,7 +186,7 @@ components:
             code: INVALID_ARGUMENT
             message: Client specified an invalid argument, request body or query param
     Generic401:
-      description: Authentication problem with the client request
+      description: Unauthorized
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -196,10 +199,7 @@ components:
             code: UNAUTHENTICATED
             message: Request not authenticated due to missing, invalid, or expired credentials
     setQosPermissionDenied403:
-      description: |
-        Client does not have sufficient permission.
-        In addition to regular PERMISSION_DENIED scenario another scenario may exist:
-          - User home network cannot be deducted from access token context.("code": "HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT","message": "User home network cannot be deducted from access token context.").
+      description: Forbidden
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -216,13 +216,10 @@ components:
             InvalidTokenContext:
               value:
                 status: 403
-                code: HOME_DEVICES_QOD.INVALID_TOKEN_CONTEXT
+                code: INVALID_TOKEN_CONTEXT
                 message: User home network cannot be deducted from access token context
     setQosNotFound404:
-      description: |
-        Resource Not Found.
-        In addition to regular scenario of NOT_FOUND, another scenario may exist.
-         - There is no device matching the input criteria. ("code": "HOME_DEVICES_QOD.NO_DEVICE_MATCH","message": "No connected device found for the input criteria provided.").
+      description: Not found
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -239,20 +236,10 @@ components:
             NoDeviceMatch:
               value:
                 status: 404
-                code: HOME_DEVICES_QOD.NO_DEVICE_MATCH
+                code: DEVICE_NOT_FOUND
                 message: No connected device found for the input criteria provided
     setQosConflict409:
-      description: |
-        Requested QoS can't be set.
-
-        In addition to regular CONFLICT scenario to handle conflict with the current state of the target resource, another scenarios may exist:
-         - HOME_DEVICES_QOD.TOO_MANY_DEVICES: Exceeded the maximum quantity of devices with non-default QoS behaviour.
-         - HOME_DEVICES_QOD.RSSI_BELOW_THRESHOLD: RSSI from device is below allowed threshold.
-         - HOME_DEVICES_QOD.QOS_TOO_HIGH: Requested QoS is higher than the maximum QoS allowed.
-         - HOME_DEVICES_QOD.OCCUPANCY_ABOVE_THRESHOLD: The occupancy is above the allowed threshold.
-         - HOME_DEVICES_QOD.NOT_CONNECTED_TO_REQUIRED_INTERFACE: Device is not connected to the required interface (e.g. WiFi 5GHz interface).
-         - HOME_DEVICES_QOD.NOT_SUPPORTED_REQUIRED_INTERFACE: Device does not support required interface (e.g. WiFi 5GHz interface).
-         - HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT: Device QoS is already set to default value.
+      description: Conflict
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -302,7 +289,7 @@ components:
                 code: HOME_DEVICES_QOD.QOS_ALREADY_SET_TO_DEFAULT
                 message: Device QoS is already set to default value
     Generic500:
-      description: Server error
+      description: Internal Server Error
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -315,11 +302,7 @@ components:
             code: INTERNAL
             message: Server error
     setQosServiceUnavailable503:
-      description: |
-        Service unavailable. Typically the server is down.
-
-        In addition to regular scenario of UNAVAILABLE to handle service availability problems, another scenario may exist.
-         - The router is offline ("code": "HOME_DEVICES_QOD.ROUTER_OFFLINE","message": "Router is not online. Try it later.").
+      description: Service Unavailable
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
@@ -332,14 +315,14 @@ components:
               value:
                 status: 503
                 code: UNAVAILABLE
-                message: Request timeout exceeded
+                message: Service Unavailable
             RouterOffline:
               value:
                 status: 503
                 code: HOME_DEVICES_QOD.ROUTER_OFFLINE
                 message: Router is not online. Try it later
     Generic504:
-      description: Request time exceeded. If it happens repeatedly, consider reducing the request complexity
+      description: Gateway Timeout
       headers:
         x-correlator:
           $ref: "#/components/headers/x-correlator"
