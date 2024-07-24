@@ -14,7 +14,7 @@ Checklist for home-devices-qod 0.4.0-rc.1 in r1.1
 |  8 | Enhanced API test cases & documentation      |   O   |         O         |    O    |    M   |   Y  | [home-devices-qod.feature](../../code/Test_definitions/home-devices-qod.feature) |
 |  9 | Test result statement                        |   O   |         O         |    O    |    M   |   N  |      |
 | 10 | API release numbering convention applied     |   M   |         M         |    M    |    M   |   Y  |      |
-| 11 | Change log updated                           |   M   |         M         |    M    |    M   |   Y  | [CHANGELOG.md](../../CHANGELOG.md) |
+| 11 | Change log updated                           |   M   |         M         |    M    |    M   |   Y  | [CHANGELOG.md](/CHANGELOG.md) |
 | 12 | Previous public release was certified        |   O   |         O         |    O    |    M   |      |      |
 
 To fill the checklist:
