@@ -56,9 +56,6 @@ info:
      # Further info and support
 
     (FAQs will be added in a later version of the documentation)
-  termsOfService: http://swagger.io/terms/
-  contact:
-    email: project-email@sample.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -362,4 +359,4 @@ tags:
     description: QoD control operations for home devices
 externalDocs:
   description: Project documentation at CAMARA
-  url: https://github.com/camaraproject/
+  url: https://github.com/camaraproject/HomeDevicesQoD
