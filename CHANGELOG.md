@@ -46,12 +46,9 @@ The API definition(s) are based on
 
 ### Changed
 
-* Update and review codeowners and maintainers md file by @hdamker in https://github.com/camaraproject/HomeDevicesQoD/pull/62
-* Update README.md according to camaraproject/Template_Lead_Repository by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/67
 * API spec update for Fall24 meta-release by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/64
 * Update testing definitions in .feature file for Fall24 meta-release by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/65
-* Update with the new API-Readiness-Checklist.md for Fall24 meta-release by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/66
-* Update filenames to kebad-case format by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/70
+* Update filenames to kebab-case format by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/70
 
 ### Fixed
 
