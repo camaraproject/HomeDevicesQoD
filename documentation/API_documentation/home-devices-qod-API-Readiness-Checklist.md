@@ -1,6 +1,6 @@
 # API Readiness Checklist
 
-Checklist for home-devices-qod 0.4.0-rc.1 in r1.1
+Checklist for home-devices-qod 0.4.0 in r1.2
 
 | Nr | API release assets  | alpha | release-candidate |  initial<br>public | stable<br> public | Status | Comments |
 |----|----------------------------------------------|:-----:|:-----------------:|:-------:|:------:|:----:|----|
