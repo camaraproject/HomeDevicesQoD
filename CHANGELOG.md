@@ -59,7 +59,7 @@ The API definition(s) are based on
 * N/A
 
 ## New Contributors
-* @hdamker made their first contribution in https://github.com/camaraproject/HomeDevicesQoD/pull/62
+* N/A
 
 **Full Changelog**: https://github.com/camaraproject/HomeDevicesQoD/compare/v0.3.0...r1.2
 
@@ -93,11 +93,8 @@ The API definition(s) are based on
 
 ### Changed
 
-* Update and review codeowners and maintainers md file by @hdamker in https://github.com/camaraproject/HomeDevicesQoD/pull/62
-* Update README.md according to camaraproject/Template_Lead_Repository by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/67
 * API spec update for Fall24 meta-release by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/64
 * Update testing definitions in .feature file for Fall24 meta-release by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/65
-* Update with the new API-Readiness-Checklist.md for Fall24 meta-release by @jpengar in https://github.com/camaraproject/HomeDevicesQoD/pull/66
 
 ### Fixed
 
@@ -108,7 +105,7 @@ The API definition(s) are based on
 * N/A
 
 ## New Contributors
-* @hdamker made their first contribution in https://github.com/camaraproject/HomeDevicesQoD/pull/62
+* N/A
 
 **Full Changelog**: https://github.com/camaraproject/HomeDevicesQoD/compare/v0.3.0...r1.1
 
