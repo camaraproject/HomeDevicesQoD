@@ -5,9 +5,13 @@
 <a href="https://github.com/camaraproject/HomeDevicesQoD" title="Repo Size"><img src="https://img.shields.io/github/repo-size/camaraproject/HomeDevicesQoD?style=plastic"></a>
 <a href="https://github.com/camaraproject/HomeDevicesQoD/blob/main/LICENSE" title="License"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg?style=plastic"></a>
 <a href="https://github.com/camaraproject/HomeDevicesQoD/releases/latest" title="Latest Release"><img src="https://img.shields.io/github/release/camaraproject/HomeDevicesQoD?style=plastic"></a>
+<a href="https://github.com/camaraproject/Governance/blob/main/ProjectStructureAndRoles.md" title="Sandbox API Repository"><img src="https://img.shields.io/badge/Sandbox%20API%20Repository-yellow?style=plastic"></a>
 
 # HomeDevicesQoD
-Repository to describe, develop, document and test the HomeDevicesQoD API family
+
+Sandbox API Repository to describe, develop, document, and test the HomeDeviceQoD Service API. The repository does not yet belong to a CAMARA Sub Project.
+
+* API Repository [wiki page](https://lf-camaraproject.atlassian.net/wiki/x/4TLe)
 
 ## Scope
 * Service APIs for “HomeDevicesQoD” (see APIBacklog.md)  
