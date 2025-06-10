@@ -25,7 +25,7 @@ Sandbox API Repository to describe, develop, document, and test the HomeDeviceQo
 * `NEW`: Release r1.2 of API version `0.4.0` is available [here](https://github.com/camaraproject/HomeDevicesQoD/tree/r1.2)
   * API definition **with inline documentation**:
     * [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.2/code/API_definitions/home-devices-qod.yaml&nocors)
-    * [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.2/code/API_definitions/home-devices-qod.yaml)
+    * [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.2/code/API_definitions/home-devices-qod.yaml)
     * OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/r1.2/code/API_definitions/home-devices-qod.yaml)
   * API additional [related documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/r1.2/documentation/API_documentation)
 * The latest public release is available here: https://github.com/camaraproject/HomeDevicesQoD/releases/latest

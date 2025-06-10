@@ -33,7 +33,7 @@ The API definition(s) are based on
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.2/code/API_definitions/home-devices-qod.yaml&nocors)
-  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.2/code/API_definitions/home-devices-qod.yaml)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.2/code/API_definitions/home-devices-qod.yaml)
   - OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/r1.2/code/API_definitions/home-devices-qod.yaml)
 
 **Main Changes**
@@ -80,7 +80,7 @@ The API definition(s) are based on
 
 - API definition **with inline documentation**:
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.1/code/API_definitions/home_devices_qod.yaml&nocors)
-  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.1/code/API_definitions/home_devices_qod.yaml)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/r1.1/code/API_definitions/home_devices_qod.yaml)
   - OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/r1.1/code/API_definitions/home_devices_qod.yaml)
 
 **Main Changes**
@@ -116,7 +116,7 @@ The API definition(s) are based on
 - API definition **with inline documentation**:
   - OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.3.0/code/API_definitions/home_devices_qod.yaml)
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.3.0/code/API_definitions/home_devices_qod.yaml&nocors)
-  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.3.0/code/API_definitions/home_devices_qod.yaml)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.3.0/code/API_definitions/home_devices_qod.yaml)
 - API additional [related documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.3.0/documentation/API_documentation)
 
 ## Please note 
@@ -152,7 +152,7 @@ The API definition(s) are based on
 - API definition **with inline documentation**:
   - OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml&nocors)
-  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.2.0/code/API_definitions/home_devices_qod.yaml)
 - API additional [related documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.2.0/documentation/API_documentation)
 
 ## Please note 
@@ -188,7 +188,7 @@ The API definition(s) are based on
 - API definition:
   - OpenAPI [YAML spec file](https://github.com/camaraproject/HomeDevicesQoD/blob/release-0.1.0/code/API_definitions/home_devices_qod.yaml)
   - [View it on ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.1.0/code/API_definitions/home_devices_qod.yaml&nocors)
-  - [View it on Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.1.0/code/API_definitions/home_devices_qod.yaml)
+  - [View it on Swagger Editor](https://camaraproject.github.io/swagger-ui/?url=https://raw.githubusercontent.com/camaraproject/HomeDevicesQoD/release-0.1.0/code/API_definitions/home_devices_qod.yaml)
 - API [documentation](https://github.com/camaraproject/HomeDevicesQoD/tree/release-0.1.0/documentation/API_documentation)
 
 ## Please note 
