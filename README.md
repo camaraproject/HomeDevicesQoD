@@ -1,3 +1,13 @@
+> [!WARNING]
+> **Repository archived**
+>
+> This repository has been archived following the CAMARA **Lifecycle Clean-up Process** and is kept for reference / maintenance of previous releases only.
+>
+> - Decision record (API Backlog/TSC): [APIBacklog#283](https://github.com/camaraproject/APIBacklog/issues/283)
+> - Lifecycle policy: [Unified Clean-up Process](https://github.com/camaraproject/Governance/blob/main/documentation/API-Onboarding-and-Lifecycle.md#unified-clean-up-process-for-inactive-onboarding-trackers-and-repositories)
+> - Reason or Phase of the process: [Phase D – Repository With Reviewed Release](https://github.com/camaraproject/Governance/blob/main/documentation/API-Onboarding-and-Lifecycle.md#archival-criteria-per-phase)
+> - Request reactivation: submit a new issue in APIBacklog referencing this archived repository: [Reactivation of archived repositories](https://github.com/camaraproject/Governance/blob/main/documentation/API-Onboarding-and-Lifecycle.md#reactivation-of-archived-repositories)
+
 <a href="https://github.com/camaraproject/HomeDevicesQoD/commits/" title="Last Commit"><img src="https://img.shields.io/github/last-commit/camaraproject/HomeDevicesQoD?style=plastic"></a>
 <a href="https://github.com/camaraproject/HomeDevicesQoD/issues" title="Open Issues"><img src="https://img.shields.io/github/issues/camaraproject/HomeDevicesQoD?style=plastic"></a>
 <a href="https://github.com/camaraproject/HomeDevicesQoD/pulls" title="Open Pull Requests"><img src="https://img.shields.io/github/issues-pr/camaraproject/HomeDevicesQoD?style=plastic"></a>
